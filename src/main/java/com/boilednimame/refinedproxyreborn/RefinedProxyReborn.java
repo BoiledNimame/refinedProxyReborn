@@ -1,12 +1,15 @@
 package com.boilednimame.refinedproxyreborn;
 
+import com.boilednimame.refinedproxyreborn.config.ServerConfig;
 import com.mojang.logging.LogUtils;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
@@ -21,6 +24,8 @@ public class RefinedProxyReborn
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
 
+    public static final ServerConfig SERVER_CONFIG = new ServerConfig();
+
     public RefinedProxyReborn()
     {
         // Register the setup method for modloading
@@ -32,7 +37,10 @@ public class RefinedProxyReborn
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, SERVER_CONFIG.getSpec());
     }
+
 
     private void setup(final FMLCommonSetupEvent event)
     {
