@@ -29,8 +29,6 @@ displayName="RefinedProxy Reborn" #mandatory
 # A file name (in the root of the mod JAR) containing a logo for display
 logoFile="logo.png" #optional
 # A text field displayed in the mod UI
-credits="Thanks for this example mod goes to Java" #optional
-# A text field displayed in the mod UI
 authors="BoiledNimame" #optional
 # Display Test controls the display for your mod in the server connection screen
 # MATCH_VERSION means that your mod will cause a red X if the versions on client and server differ. This is the default behaviour and should be what you choose if you have server and client elements to your mod.
@@ -42,9 +40,8 @@ authors="BoiledNimame" #optional
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-As there is no public github repository for the refinedProxy,
-it is created from scratch for the purpose of using the refinedProxy again,
-which has stopped being updated in Forge 1.18.1.
+This mod is intended to expose items on the RefinedStorage network to external storage management systems
+such as Integrated Tunnels, so that the items can be managed from the outside.
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.refinedproxyreborn]] #optional
@@ -52,6 +49,8 @@ which has stopped being updated in Forge 1.18.1.
     modId="refinedstorage" #mandatory
     # Does this dependency have to exist - if not, ordering below must be specified
     mandatory=true #mandatory
+    # why
+    type=""
     # The version range of the dependency
     versionRange="[1.10.6,)" #mandatory
     # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
