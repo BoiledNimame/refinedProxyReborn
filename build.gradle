@@ -175,6 +175,10 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:jei-238222:5068328")
     runtimeOnly fg.deobf("curse.maven:jei-integration-265917:3812175")
 
+    // required
+    runtimeOnly fg.deobf("curse.maven:cyclops-core-232758:4905958")
+    runtimeOnly fg.deobf("curse.maven:common-capabilities-247007:4987177")
+
     // integrated mods
     runtimeOnly fg.deobf("curse.maven:integrated-dynamics-236307:5099616")
     runtimeOnly fg.deobf("curse.maven:integrated-tunnels-251389:4724174")
@@ -182,7 +186,6 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:integrated-terminals-295910:4925591")
     runtimeOnly fg.deobf("curse.maven:integrated-nbt-380998:3824420")
     runtimeOnly fg.deobf("curse.maven:integrated-rest-284332:4502099")
-
 
     // jade +
     runtimeOnly fg.deobf("curse.maven:jade-324717:5079263")
