@@ -43,9 +43,9 @@ public class RefinedProxyNetworkNode extends NetworkNode implements IItemHandler
 
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, ID_REFINEDPROXY);
 
-    protected RefinedProxyNetworkNode(Level level, BlockPos pos, INetwork network) {
+    public RefinedProxyNetworkNode(Level level, BlockPos pos) {
         super(level, pos);
-        this.network = network;
+        this.network = getNetwork(); // マジでこれで良いの? 知らねえぞ俺
         invalidate();
     }
 
