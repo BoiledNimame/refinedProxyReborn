@@ -18,15 +18,17 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
-@Mod("refinedproxyreborn")
-public class RefinedProxyReborn
+@Mod(RP.ID)
+public class RP
 {
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
 
+    public static final String ID = "refinedproxyreborn";
+
     public static final ServerConfig SERVER_CONFIG = new ServerConfig();
 
-    public RefinedProxyReborn()
+    public RP()
     {
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
