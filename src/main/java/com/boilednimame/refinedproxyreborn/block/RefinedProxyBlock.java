@@ -1,9 +1,11 @@
 package com.boilednimame.refinedproxyreborn.block;
 
 import com.boilednimame.refinedproxyreborn.blockEntity.RefinedProxyBlockEntity;
+import com.boilednimame.refinedproxyreborn.container.RefinedProxyContainerMenu;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
 import com.refinedmods.refinedstorage.block.NetworkNodeBlock;
 
+import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -35,8 +37,7 @@ public class RefinedProxyBlock extends NetworkNodeBlock {
      * 必要そうなメソッド候補::
      *  newBlockEntity (済)
      *  hasConnectedState (済)
-     *  use (未定)
-     *  neighborChanged (未定)
+     *  use (不完全)
      */
 
     public RefinedProxyBlock(BlockPos pos, BlockState state) {
@@ -50,16 +51,22 @@ public class RefinedProxyBlock extends NetworkNodeBlock {
     }
 
     // 必要なし？ -> このブロックはguiを持つ必要がないが, 継承の仕様上バグの原因になりそう.
+    @NotNull
     @Override
     @SuppressWarnings("deprecation")
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    public InteractionResult use(@NotNull BlockState state,
+                                 @NotNull Level level,
+                                 @NotNull BlockPos pos,
+                                 @NotNull Player player,
+                                 @NotNull InteractionHand handIn,
+                                 @NotNull BlockHitResult hit) {
         if (!level.isClientSide) {
             return NetworkUtils.attempt(level, pos, player, () -> NetworkHooks.openGui(
                     (ServerPlayer) player,
-                    new BlockEntityMenuProvider<InterfaceBlockEntity>(
+                    new BlockEntityMenuProvider<RefinedProxyBlockEntity>(
                             new TranslatableComponent("gui.refinedproxyreborn.refinedproxy"),
                             (blockEntity, windowId, inventory, p)
-                                    -> new InterfaceContainerMenu(blockEntity, player, windowId), pos
+                                    -> new RefinedProxyContainerMenu(blockEntity, player, windowId), pos
                     ),
                     pos
             ), Permission.MODIFY, Permission.INSERT, Permission.EXTRACT);
