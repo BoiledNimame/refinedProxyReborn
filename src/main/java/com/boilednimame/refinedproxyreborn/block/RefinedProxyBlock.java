@@ -40,7 +40,7 @@ public class RefinedProxyBlock extends NetworkNodeBlock {
      *  use (不完全)
      */
 
-    public RefinedProxyBlock(BlockPos pos, BlockState state) {
+    public RefinedProxyBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
     }
 
