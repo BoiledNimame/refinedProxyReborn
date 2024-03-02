@@ -41,8 +41,6 @@ import java.util.List;
 
 public class RefinedProxyNetworkNode extends NetworkNode implements IItemHandler, IComparable, ObjectID, IStorageCacheListener<ItemStack> {
 
-    public static final ResourceLocation ID = new ResourceLocation(RS.ID, ID_REFINEDPROXY);
-
     public RefinedProxyNetworkNode(Level level, BlockPos pos) {
         super(level, pos);
         this.network = getNetwork(); // マジでこれで良いの? 知らねえぞ俺
