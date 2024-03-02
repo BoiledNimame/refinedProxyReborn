@@ -18,6 +18,7 @@ import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 
 /*
  * reference:
@@ -43,7 +44,6 @@ public class RefinedProxyNetworkNode extends NetworkNode implements IItemHandler
 
     public RefinedProxyNetworkNode(Level level, BlockPos pos) {
         super(level, pos);
-        this.network = getNetwork(); // マジでこれで良いの? 知らねえぞ俺
         invalidate();
     }
 
@@ -59,7 +59,6 @@ public class RefinedProxyNetworkNode extends NetworkNode implements IItemHandler
 
     // ここから新規(IItemHandler)
 
-    private final INetwork network;
     private ItemStack[] networkCacheItemData; // このブロックの内部インベントリ?
 
 
@@ -87,7 +86,7 @@ public class RefinedProxyNetworkNode extends NetworkNode implements IItemHandler
     public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
         // 元コードではnull回避でnull -> emptyとする処理を挟んでいたがどうやら必要なくなった?(IDEが言っているだけなので信用してはならない)
         // そもそもStackUtilsにnullToEmptyが無くなっていたようなので, Minecraft本体の部分が進化したのかも
-        return network.insertItem(stack, stack.getCount(), simulate ? Action.SIMULATE : Action.PERFORM);
+        return Objects.requireNonNull(network).insertItem(stack, stack.getCount(), simulate ? Action.SIMULATE : Action.PERFORM);
     }
 
     // 参照: exposer
@@ -95,7 +94,7 @@ public class RefinedProxyNetworkNode extends NetworkNode implements IItemHandler
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
         if (slot < networkCacheItemData.length) {
-            return network.extractItem(
+            return Objects.requireNonNull(network).extractItem(
                     networkCacheItemData[slot],
                     amount,
                     IComparer.COMPARE_NBT | IComparer.COMPARE_QUANTITY, // 疑問点: 元コードと異なる挙動が予想される
@@ -119,11 +118,17 @@ public class RefinedProxyNetworkNode extends NetworkNode implements IItemHandler
     // 参照: exposer
     @SuppressWarnings("all") // インスペクションとかわからん;;;; ごめん;;
     private void invalidate() {
-        this.networkCacheItemData = network
-                .getItemStorageCache()
-                .getList()
-                .getStacks()
-                .toArray(new ItemStack[0]); // バグの原因たり得る? IDEは型違うと言ってるけど
+        if (networkCacheItemData != null) {
+            this.networkCacheItemData = network
+                    .getItemStorageCache()
+                    .getList()
+                    .getStacks()
+                    .toArray(new ItemStack[0]); // バグの原因たり得る? IDEは型違うと言ってるけど
+        } else {
+            RP.getLogger().warn("running incalidate(), but networkCacheItemData is Null!");
+            RP.getLogger().info("current network:" + this.network);
+            // throw new NullPointerException(); // ここで死んでる:: networkItemDataが空!?
+        }
     }
 
     // 参照: exposer
