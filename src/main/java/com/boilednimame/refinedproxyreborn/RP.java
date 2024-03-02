@@ -40,6 +40,10 @@ public class RP
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
 
+        // Register This Mod's items
+        RPBlocks.register();
+        RPItems.register();
+
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, SERVER_CONFIG.getSpec());
     }
 
