@@ -2,8 +2,6 @@ package com.boilednimame.refinedproxyreborn.apiimpl.network.node;
 
 import com.boilednimame.refinedproxyreborn.ObjectID;
 import com.boilednimame.refinedproxyreborn.RP;
-import com.refinedmods.refinedstorage.RS;
-import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.storage.cache.IStorageCacheListener;
 import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.api.util.IComparer;
@@ -41,6 +39,8 @@ import java.util.Objects;
  */
 
 public class RefinedProxyNetworkNode extends NetworkNode implements IItemHandler, IComparable, ObjectID, IStorageCacheListener<ItemStack> {
+
+    public static final ResourceLocation ID =  new ResourceLocation(RP.ID, ID_REFINEDPROXY);
 
     public RefinedProxyNetworkNode(Level level, BlockPos pos) {
         super(level, pos);
