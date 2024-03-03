@@ -2,10 +2,12 @@ package com.boilednimame.refinedproxyreborn.apiimpl.network.node;
 
 import com.boilednimame.refinedproxyreborn.ObjectID;
 import com.boilednimame.refinedproxyreborn.RP;
+import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.storage.cache.IStorageCacheListener;
 import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.api.util.StackListResult;
+import com.refinedmods.refinedstorage.apiimpl.network.node.ConnectivityStateChangeCause;
 import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.refinedmods.refinedstorage.blockentity.config.IComparable;
 import net.minecraft.core.BlockPos;
@@ -14,6 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.Objects;
@@ -42,6 +45,8 @@ public class RefinedProxyNetworkNode extends NetworkNode implements IItemHandler
 
     public static final ResourceLocation ID =  new ResourceLocation(RP.ID, ID_REFINEDPROXY);
 
+    private static final Logger logger = RP.getLogger();
+
     public RefinedProxyNetworkNode(Level level, BlockPos pos) {
         super(level, pos);
         invalidate();
@@ -54,7 +59,33 @@ public class RefinedProxyNetworkNode extends NetworkNode implements IItemHandler
 
     @Override
     public ResourceLocation getId() {
-        return null;
+        return ID;
+    }
+
+    // Network関連
+
+    private INetwork network;
+
+    @Override
+    public void onConnected(INetwork network) {
+        this.onConnectedStateChange(network, true, ConnectivityStateChangeCause.GRAPH_CHANGE);
+        logger.info("RefinedProxy try to connect this network: " + network);
+        this.network = network;
+
+        if ( this.network != null ) {
+            logger.info("successfully to connect to this network: " + this.network.getLevel() + ", " + this.network.getPosition());
+            logger.info("try to add ItemStorageCache to RefinedProxy");
+            network.getItemStorageCache().addListener(this);
+        } else {
+            logger.warn("RefinedProxy may failed to connect to network!");
+        }
+    }
+
+    @Override
+    public void onDisconnected(INetwork network) {
+        super.onDisconnected(network);
+
+        network.getItemStorageCache().removeListener(this);
     }
 
     // ここから新規(IItemHandler)
@@ -116,18 +147,15 @@ public class RefinedProxyNetworkNode extends NetworkNode implements IItemHandler
     // IStorageCacheListener<ItemStack>
 
     // 参照: exposer
-    @SuppressWarnings("all") // インスペクションとかわからん;;;; ごめん;;
     private void invalidate() {
-        if (networkCacheItemData != null) {
+        if (network != null) {
             this.networkCacheItemData = network
                     .getItemStorageCache()
                     .getList()
                     .getStacks()
-                    .toArray(new ItemStack[0]); // バグの原因たり得る? IDEは型違うと言ってるけど
+                    .toArray(new ItemStack[0]); // TODO バグの原因たり得た
         } else {
-            RP.getLogger().warn("running incalidate(), but networkCacheItemData is Null!");
-            RP.getLogger().info("current network:" + this.network);
-            // throw new NullPointerException(); // ここで死んでる:: networkItemDataが空!?
+            logger.warn("running incalidate(), but network is Null!");
         }
     }
 
