@@ -46,7 +46,7 @@ public class CommonSetup implements ObjectID {
     private static <T extends BlockEntity> BlockEntityType<T> registerSynchronizationParameters(BlockEntityType<T> t) {
         BaseBlockEntity blockEntity = (BaseBlockEntity) t.create(BlockPos.ZERO, null);
 
-        Objects.requireNonNull(blockEntity).getDataManager().getParameters().forEach(BlockEntitySynchronizationManager::registerParameter); // TODO ああ...
+        Objects.requireNonNull(blockEntity).getDataManager().getParameters().forEach(BlockEntitySynchronizationManager::registerParameter);
 
         return t;
     }
