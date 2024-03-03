@@ -50,31 +50,6 @@ public class RefinedProxyBlock extends NetworkNodeBlock {
         return new RefinedProxyBlockEntity(pos, state);
     }
 
-    // 必要なし？ -> このブロックはguiを持つ必要がないが, 継承の仕様上バグの原因になりそう.
-    @NotNull
-    @Override
-    @SuppressWarnings("deprecation")
-    public InteractionResult use(@NotNull BlockState state,
-                                 @NotNull Level level,
-                                 @NotNull BlockPos pos,
-                                 @NotNull Player player,
-                                 @NotNull InteractionHand handIn,
-                                 @NotNull BlockHitResult hit) {
-        if (!level.isClientSide) {
-            return NetworkUtils.attempt(level, pos, player, () -> NetworkHooks.openGui(
-                    (ServerPlayer) player,
-                    new BlockEntityMenuProvider<RefinedProxyBlockEntity>(
-                            new TranslatableComponent("gui.refinedproxyreborn.refinedproxy"),
-                            (blockEntity, windowId, inventory, p)
-                                    -> new RefinedProxyContainerMenu(blockEntity, player, windowId), pos
-                    ),
-                    pos
-            ), Permission.MODIFY, Permission.INSERT, Permission.EXTRACT);
-        }
-
-        return InteractionResult.SUCCESS;
-    }
-
     // 必須: 恐らくはケーブルが接続可能かどうか
     @Override
     public boolean hasConnectedState() {
