@@ -6,6 +6,7 @@ import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.storage.cache.IStorageCacheListener;
 import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.api.util.IComparer;
+import com.refinedmods.refinedstorage.api.util.StackListEntry;
 import com.refinedmods.refinedstorage.api.util.StackListResult;
 import com.refinedmods.refinedstorage.apiimpl.network.node.ConnectivityStateChangeCause;
 import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode;
@@ -18,6 +19,7 @@ import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -76,6 +78,7 @@ public class RefinedProxyNetworkNode extends NetworkNode implements IItemHandler
             logger.info("successfully to connect to this network: " + this.network.getLevel() + ", " + this.network.getPosition());
             logger.info("try to add ItemStorageCache to RefinedProxy");
             network.getItemStorageCache().addListener(this);
+            this.invalidate();
         } else {
             logger.warn("RefinedProxy may failed to connect to network!");
         }
@@ -97,7 +100,7 @@ public class RefinedProxyNetworkNode extends NetworkNode implements IItemHandler
     @Override
     public int getSlots() {
         // getStackInSlot が getSlots して引数を決定しているので +1 して null防止してる?
-        return networkCacheItemData.length + 1;
+        return this.networkCacheItemData.length + 1;
     }
 
     // 参照: exposer
@@ -105,9 +108,10 @@ public class RefinedProxyNetworkNode extends NetworkNode implements IItemHandler
     @Override
     public ItemStack getStackInSlot(int slot) {
         // 無を参照しないようにしている?
-        if (slot < networkCacheItemData.length) {
-            return networkCacheItemData[slot];
+        if (slot < this.networkCacheItemData.length) {
+            return this.networkCacheItemData[slot];
         }
+        logger.warn("Try to getStackInSlot, but... : " + Arrays.toString(this.networkCacheItemData));
         return ItemStack.EMPTY;
     }
 
@@ -124,9 +128,9 @@ public class RefinedProxyNetworkNode extends NetworkNode implements IItemHandler
     @NotNull
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        if (slot < networkCacheItemData.length) {
+        if (slot < this.networkCacheItemData.length) {
             return Objects.requireNonNull(network).extractItem(
-                    networkCacheItemData[slot],
+                    this.networkCacheItemData[slot],
                     amount,
                     IComparer.COMPARE_NBT | IComparer.COMPARE_QUANTITY, // 疑問点: 元コードと異なる挙動が予想される
                     simulate ? Action.SIMULATE : Action.PERFORM); // 三項演算子 bool ? bool->true : bool->false
@@ -148,14 +152,17 @@ public class RefinedProxyNetworkNode extends NetworkNode implements IItemHandler
 
     // 参照: exposer
     private void invalidate() {
-        if (network != null) {
-            this.networkCacheItemData = network
+        if (this.network != null) {
+            this.networkCacheItemData = Arrays.stream(network
                     .getItemStorageCache()
                     .getList()
                     .getStacks()
+                    .toArray(new StackListEntry[0]))
+                    .map( m -> (ItemStack) m.getStack() )
+                    .toList()
                     .toArray(new ItemStack[0]); // TODO バグの原因たり得た
         } else {
-            logger.warn("running incalidate(), but network is Null!");
+            logger.warn("running invalidate(), but network is Null!");
         }
     }
 
