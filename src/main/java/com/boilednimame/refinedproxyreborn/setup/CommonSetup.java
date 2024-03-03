@@ -7,17 +7,13 @@ import com.boilednimame.refinedproxyreborn.apiimpl.network.node.RefinedProxyNetw
 import com.boilednimame.refinedproxyreborn.blockEntity.RefinedProxyBlockEntity;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.API;
-import com.refinedmods.refinedstorage.apiimpl.network.NetworkListener;
-import com.refinedmods.refinedstorage.apiimpl.network.NetworkNodeListener;
 import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode;
-import com.refinedmods.refinedstorage.block.BlockListener;
 import com.refinedmods.refinedstorage.blockentity.BaseBlockEntity;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 

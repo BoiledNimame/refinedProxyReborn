@@ -4,7 +4,6 @@ import com.boilednimame.refinedproxyreborn.config.ServerConfig;
 import com.boilednimame.refinedproxyreborn.datageneration.DataGenerator;
 import com.boilednimame.refinedproxyreborn.setup.CommonSetup;
 import com.mojang.logging.LogUtils;
-import com.refinedmods.refinedstorage.network.NetworkHandler;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.common.MinecraftForge;
