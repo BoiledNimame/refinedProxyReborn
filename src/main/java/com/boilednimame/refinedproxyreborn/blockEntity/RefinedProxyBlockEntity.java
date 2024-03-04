@@ -8,6 +8,8 @@ import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizatio
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 
@@ -18,6 +20,8 @@ import javax.annotation.Nonnull;
 
 public class RefinedProxyBlockEntity extends NetworkNodeBlockEntity<RefinedProxyNetworkNode>{
     public static final BlockEntitySynchronizationParameter<Integer, RefinedProxyBlockEntity> COMPARE = IComparable.createParameter();
+
+    private final LazyOptional<IItemHandler> itemsCapability = LazyOptional.of(() -> getNode().getItems());
 
     public RefinedProxyBlockEntity(BlockPos pos, BlockState state) {
         super(RPBlockEntities.REFINEDPROXY, pos, state, RefinedProxyNetworkNode.class);
