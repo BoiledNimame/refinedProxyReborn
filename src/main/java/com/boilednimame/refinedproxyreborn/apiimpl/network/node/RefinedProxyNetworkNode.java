@@ -61,11 +61,13 @@ public class RefinedProxyNetworkNode extends NetworkNode implements IComparable,
         network.getItemStorageCache().addListener(itemHandler);
     }
 
+    // TODO 再接続が上手く行っていない！全く！上手く行っていない！多分！
+    // TODO LazyOptionalが逝ってるらしい(笑) (苦笑) (暗黒微笑)
+
     @Override
     public void onDisconnected(INetwork network) {
         super.onDisconnected(network);
         network.getItemStorageCache().removeListener(itemHandler);
-        itemHandler = null;
     }
 
     // IComparable: どこ見てもこの実装なのでこれで良いかと思われる
