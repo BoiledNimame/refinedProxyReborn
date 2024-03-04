@@ -67,24 +67,14 @@ public class RefinedProxyItemHandler implements IItemHandler, IStorageCacheListe
     @NotNull
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        logger.debug("------------------------------------------------------");
-        logger.debug("running extractItem");
-        logger.debug("引数 slot    :" + slot);
-        logger.debug("引数 amount  :" + amount);
-        logger.debug("引数 simulate:" + simulate);
-        logger.debug("比較 item_len:" + this.networkCacheItemData.length);
-        if (slot < this.networkCacheItemData.length) {
-            logger.debug("dump:" + Objects.requireNonNull(this.network).extractItem(
-                    this.networkCacheItemData[slot],
-                    amount,
-                    IComparer.COMPARE_NBT | IComparer.COMPARE_QUANTITY,
-                    simulate ? Action.SIMULATE : Action.PERFORM));
-            logger.debug("dump: " + IComparer.COMPARE_NBT + "|" + IComparer.COMPARE_QUANTITY);
-            return Objects.requireNonNull(this.network).extractItem( // ホッパー繋げたらcrashした
-                    this.networkCacheItemData[slot],
-                    amount,
-                    IComparer.COMPARE_NBT | IComparer.COMPARE_QUANTITY, // exposerとコードは違うけど値は同じなので一緒
-                    simulate ? Action.SIMULATE : Action.PERFORM); // 三項演算子 bool ? bool->true : bool->false
+        if (this.networkCacheItemData.length != 0) {
+            if (slot < this.networkCacheItemData.length) {
+                return Objects.requireNonNull(this.network).extractItem(
+                        this.networkCacheItemData[slot],
+                        amount,
+                        IComparer.COMPARE_NBT | IComparer.COMPARE_QUANTITY, // exposerとコードは違うけど値は同じなので一緒
+                        simulate ? Action.SIMULATE : Action.PERFORM); // 三項演算子 bool ? bool->true : bool->false
+            }
         }
         return ItemStack.EMPTY;
     }
