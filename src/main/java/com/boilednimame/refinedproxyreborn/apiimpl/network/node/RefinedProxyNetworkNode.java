@@ -40,7 +40,7 @@ import java.util.Objects;
  * 「ネットワーク上と外部を繋ぐ」 -> externalStorage ?
  *
  *  解決策:
- *  ・モロexposure(これの元ネタ)のコードを参照してみる(verが古いので, そこを解決すれば使えるだろうか?) -> 使えた.
+ *  ・モロexposure(これの元ネタ)のコードを参照してみる(verが古いので, そこを解決すれば使えるだろうか?) -> 使えた. -> RefinedProxyItemHandlerへ移した
  */
 
 public class RefinedProxyNetworkNode extends NetworkNode implements IItemHandler, IComparable, ObjectID, IStorageCacheListener<ItemStack> {
@@ -201,4 +201,7 @@ public class RefinedProxyNetworkNode extends NetworkNode implements IItemHandler
         markDirty();
     }
 
+    public IItemHandler getItems() {
+        return this;
+    }
 }
