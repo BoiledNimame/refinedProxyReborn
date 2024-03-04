@@ -24,6 +24,15 @@ public class RefinedProxyItemHandler implements IItemHandler, IStorageCacheListe
 
     public RefinedProxyItemHandler(INetwork network) {
         this.network = network;
+
+        if ( this.network != null ) {
+            logger.info("successfully to connect to this network: " + this.network.getLevel() + ", " + this.network.getPosition());
+            logger.info("try to add ItemStorageCache to RefinedProxy");
+            network.getItemStorageCache().addListener(this);
+            this.invalidate();
+        } else {
+            logger.warn("RefinedProxy may failed to connect to network!");
+        }
         invalidate();
     }
 
@@ -71,12 +80,12 @@ public class RefinedProxyItemHandler implements IItemHandler, IStorageCacheListe
 
     @Override
     public int getSlotLimit(int slot) {
-        return 64; // 1stack
+        return 64;
     }
 
     @Override
     public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-        return true; // trueでいいっぽいが
+        return true; // trueでいい
     }
 
     // IStorageCacheListener<ItemStack>
@@ -91,9 +100,9 @@ public class RefinedProxyItemHandler implements IItemHandler, IStorageCacheListe
                             .toArray(new StackListEntry[0]))
                     .map( m -> (ItemStack) m.getStack() )
                     .toList()
-                    .toArray(new ItemStack[0]);
+                    .toArray(new ItemStack[0]); // 正常に動作しているのを確認
         } else {
-            logger.warn("running invalidate(), but network is Null!");
+            logger.warn("running invalidate(), but network is Null!"); // 恐らく, 冗長
         }
     }
 
