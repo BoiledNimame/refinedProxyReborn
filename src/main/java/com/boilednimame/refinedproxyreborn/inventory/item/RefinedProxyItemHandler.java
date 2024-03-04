@@ -39,7 +39,7 @@ public class RefinedProxyItemHandler implements IItemHandler, IStorageCacheListe
     // 参照: exposer
     @Override
     public int getSlots() {
-        // getStackInSlot が getSlots して引数を決定しているので +1 して null防止してる?
+        // 異常なし.
         return this.networkCacheItemData.length + 1;
     }
 
@@ -47,11 +47,10 @@ public class RefinedProxyItemHandler implements IItemHandler, IStorageCacheListe
     @NotNull
     @Override
     public ItemStack getStackInSlot(int slot) {
-        // 無を参照しないようにしている?
+        // 異常なし.
         if (slot < this.networkCacheItemData.length) {
             return this.networkCacheItemData[slot];
         }
-        logger.warn("Try to getStackInSlot, but... : " + Arrays.toString(this.networkCacheItemData));
         return ItemStack.EMPTY;
     }
 
@@ -68,11 +67,23 @@ public class RefinedProxyItemHandler implements IItemHandler, IStorageCacheListe
     @NotNull
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
+        logger.debug("------------------------------------------------------");
+        logger.debug("running extractItem");
+        logger.debug("引数 slot    :" + slot);
+        logger.debug("引数 amount  :" + amount);
+        logger.debug("引数 simulate:" + simulate);
+        logger.debug("比較 item_len:" + this.networkCacheItemData.length);
         if (slot < this.networkCacheItemData.length) {
-            return Objects.requireNonNull(network).extractItem(
+            logger.debug("dump:" + Objects.requireNonNull(this.network).extractItem(
                     this.networkCacheItemData[slot],
                     amount,
-                    IComparer.COMPARE_NBT | IComparer.COMPARE_QUANTITY, // 疑問点: 元コードと異なる挙動が予想される
+                    IComparer.COMPARE_NBT | IComparer.COMPARE_QUANTITY,
+                    simulate ? Action.SIMULATE : Action.PERFORM));
+            logger.debug("dump: " + IComparer.COMPARE_NBT + "|" + IComparer.COMPARE_QUANTITY);
+            return Objects.requireNonNull(this.network).extractItem( // ホッパー繋げたらcrashした
+                    this.networkCacheItemData[slot],
+                    amount,
+                    IComparer.COMPARE_NBT | IComparer.COMPARE_QUANTITY, // exposerとコードは違うけど値は同じなので一緒
                     simulate ? Action.SIMULATE : Action.PERFORM); // 三項演算子 bool ? bool->true : bool->false
         }
         return ItemStack.EMPTY;
