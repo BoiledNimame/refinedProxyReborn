@@ -17,23 +17,30 @@ import java.util.List;
 import java.util.Objects;
 
 public class RefinedProxyItemHandler implements IItemHandler, IStorageCacheListener<ItemStack> {
-    private final INetwork network;
+    private INetwork network;
     private ItemStack[] networkCacheItemData; // このブロックの内部インベントリ?
 
     private static final Logger logger = RP.getLogger();
 
-    public RefinedProxyItemHandler(INetwork network) {
-        this.network = network;
+    public RefinedProxyItemHandler() {
+        this.networkCacheItemData = new ItemStack[]{ItemStack.EMPTY};
+    }
 
+    public void connectNetwork(INetwork network) {
+        this.network = network;
         if ( this.network != null ) {
             logger.info("successfully to connect to this network: " + this.network.getLevel() + ", " + this.network.getPosition());
             logger.info("try to add ItemStorageCache to RefinedProxy");
-            network.getItemStorageCache().addListener(this);
             this.invalidate();
         } else {
             logger.warn("RefinedProxy may failed to connect to network!");
         }
         invalidate();
+    }
+
+    public void disconnectNetwork() {
+        this.network = null;
+        logger.info("RefinedProxy is Disconnect from Network.");
     }
 
     // 参照: exposer

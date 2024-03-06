@@ -52,15 +52,15 @@ public class RefinedProxyNetworkNode extends NetworkNode implements IComparable,
         return ID;
     }
 
-    private RefinedProxyItemHandler itemHandler;
-
     private INetwork network;
+
+    private final RefinedProxyItemHandler itemHandler = new RefinedProxyItemHandler();
 
     @Override
     public void onConnected(INetwork network) {
         this.network = network;
+        itemHandler.connectNetwork(network);
         this.onConnectedStateChange(network, true, ConnectivityStateChangeCause.GRAPH_CHANGE);
-        this.itemHandler = new RefinedProxyItemHandler(this.network);
         network.getItemStorageCache().addListener(itemHandler);
     }
 
@@ -68,7 +68,7 @@ public class RefinedProxyNetworkNode extends NetworkNode implements IComparable,
     public void onDisconnected(INetwork network) {
         network.getItemStorageCache().removeListener(itemHandler);
         this.onConnectedStateChange(network, false, ConnectivityStateChangeCause.GRAPH_CHANGE);
-        this.itemHandler = null;
+        this.itemHandler.disconnectNetwork();
         this.network = null;
     }
 
