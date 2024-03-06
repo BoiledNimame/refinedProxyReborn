@@ -39,7 +39,6 @@ public class RefinedProxyBlockEntity extends NetworkNodeBlockEntity<RefinedProxy
         if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return itemsCapability.cast();
         }
-
         return super.getCapability(cap, direction);
     }
 

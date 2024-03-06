@@ -54,20 +54,22 @@ public class RefinedProxyNetworkNode extends NetworkNode implements IComparable,
 
     private RefinedProxyItemHandler itemHandler;
 
+    private INetwork network;
+
     @Override
     public void onConnected(INetwork network) {
+        this.network = network;
         this.onConnectedStateChange(network, true, ConnectivityStateChangeCause.GRAPH_CHANGE);
-        this.itemHandler = new RefinedProxyItemHandler(network);
+        this.itemHandler = new RefinedProxyItemHandler(this.network);
         network.getItemStorageCache().addListener(itemHandler);
     }
 
-    // TODO 再接続が上手く行っていない！全く！上手く行っていない！多分！
-    // TODO LazyOptionalが逝ってるらしい(笑) (苦笑) (暗黒微笑)
-
     @Override
     public void onDisconnected(INetwork network) {
-        super.onDisconnected(network);
         network.getItemStorageCache().removeListener(itemHandler);
+        this.onConnectedStateChange(network, false, ConnectivityStateChangeCause.GRAPH_CHANGE);
+        this.itemHandler = null;
+        this.network = null;
     }
 
     // IComparable: どこ見てもこの実装なのでこれで良いかと思われる
