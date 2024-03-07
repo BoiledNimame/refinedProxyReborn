@@ -20,6 +20,8 @@ public class RefinedProxyItemHandler implements IItemHandler, IStorageCacheListe
     private INetwork network;
     private ItemStack[] networkCacheItemData; // このブロックの内部インベントリ?
 
+    private boolean onInvalidate;
+
     private static final Logger logger = RP.getLogger();
 
     public RefinedProxyItemHandler() {
@@ -35,6 +37,7 @@ public class RefinedProxyItemHandler implements IItemHandler, IStorageCacheListe
         } else {
             logger.warn("RefinedProxy may failed to connect to network!");
         }
+        this.onInvalidate = false;
         invalidate();
     }
 
@@ -101,14 +104,18 @@ public class RefinedProxyItemHandler implements IItemHandler, IStorageCacheListe
     // 参照: exposer
     private void invalidate() {
         if (this.network != null) {
-            this.networkCacheItemData = Arrays.stream(network
-                            .getItemStorageCache()
-                            .getList()
-                            .getStacks()
-                            .toArray(new StackListEntry[0]))
-                    .map( m -> (ItemStack) m.getStack() )
-                    .toList()
-                    .toArray(new ItemStack[0]); // 正常に動作しているのを確認
+            if (!this.onInvalidate) {
+                this.onInvalidate = true;
+                this.networkCacheItemData = Arrays.stream(network
+                                .getItemStorageCache()
+                                .getList()
+                                .getStacks()
+                                .toArray(new StackListEntry[0]))
+                        .map( m -> (ItemStack) m.getStack() )
+                        .toList()
+                        .toArray(new ItemStack[0]); // 正常に動作しているのを確認
+                this.onInvalidate = false;
+            }
         } else {
             logger.warn("running invalidate(), but network is Null!"); // 恐らく, 冗長
         }
