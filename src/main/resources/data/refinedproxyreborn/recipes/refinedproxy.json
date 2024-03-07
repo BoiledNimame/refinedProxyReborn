@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CIC",
+    "RMR",
+    "DED"
+  ],
+  "key": {
+    "C": {
+      "item": "refinedstorage:construction_core"
+    },
+    "D": {
+      "item": "refinedstorage:destruction_core"
+    },
+    "I": {
+      "item": "refinedstorage:importer"
+    },
+    "E": {
+      "item": "refinedstorage:exporter"
+    },
+    "M": {
+      "item": "refinedstorage:interface"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "item": "refinedproxyreborn:refinedproxy"
+  }
+}
