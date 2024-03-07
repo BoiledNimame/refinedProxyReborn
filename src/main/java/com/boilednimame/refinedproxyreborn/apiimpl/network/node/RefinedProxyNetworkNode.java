@@ -12,8 +12,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandler;
-import org.slf4j.Logger;
-
 
 /*
  * reference:
@@ -47,8 +45,6 @@ public class RefinedProxyNetworkNode extends NetworkNode implements IComparable,
     public int getEnergyUsage() {
         return RP.SERVER_CONFIG.getrRefinedProxy().getUsage();
     }
-
-    private static final Logger logger = RP.getLogger();
 
     @Override
     public ResourceLocation getId() {
