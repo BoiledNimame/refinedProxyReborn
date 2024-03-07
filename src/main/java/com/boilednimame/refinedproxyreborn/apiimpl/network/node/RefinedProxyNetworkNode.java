@@ -12,6 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandler;
+import org.slf4j.Logger;
 
 
 /*
@@ -47,12 +48,12 @@ public class RefinedProxyNetworkNode extends NetworkNode implements IComparable,
         return RP.SERVER_CONFIG.getrRefinedProxy().getUsage();
     }
 
+    private static final Logger logger = RP.getLogger();
+
     @Override
     public ResourceLocation getId() {
         return ID;
     }
-
-    private INetwork network;
 
     private final RefinedProxyItemHandler itemHandler = new RefinedProxyItemHandler();
 
@@ -70,6 +71,11 @@ public class RefinedProxyNetworkNode extends NetworkNode implements IComparable,
         this.onConnectedStateChange(network, false, ConnectivityStateChangeCause.GRAPH_CHANGE);
         this.itemHandler.disconnectNetwork();
         this.network = null;
+    }
+
+    @Override
+    public void update() {
+        super.update();
     }
 
     // IComparable: どこ見てもこの実装なのでこれで良いかと思われる
