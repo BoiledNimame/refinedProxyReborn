@@ -17,20 +17,6 @@ import net.minecraftforge.items.IItemHandler;
  * reference:
  *    https://github.com/refinedmods/refinedstorage/blob/v1.10.6/src/main/java/com/refinedmods/refinedstorage/apiimpl/network/node/InterfaceNetworkNode.java
  *    https://git.tilera.org/tilera/Exposer/src/branch/master/src/main/java/ley/anvil/exposer/cap/ItemHandlerExposer.java
- *
- * 疑問点:
- *  ・内部インベントリはどうすればいいのか
- *  ・外部からのアイテムリクエストはどう処理するのか? またその受け口となるイベントは? -> 解決済 (=> 解決策)
- *   ただし, これは「このブロックの内部インベントリを定義してそれをネットワーク上のアイテムと同期させる」
- *   ことで解決可能かもしれないが, 負荷が心配
- *
- * 挙動から参照先を絞る:
- * 「ネットワーク上のアイテムを捜索する」 -> crafter辺り ?
- * 「ネットワーク上のフルブロック機器」 -> Interface ?
- * 「ネットワーク上と外部を繋ぐ」 -> externalStorage ?
- *
- *  解決策:
- *  ・モロexposure(これの元ネタ)のコードを参照してみる(verが古いので, そこを解決すれば使えるだろうか?) -> 使えた. -> RefinedProxyItemHandlerへ移した
  */
 
 public class RefinedProxyNetworkNode extends NetworkNode implements IComparable, ObjectID {
@@ -74,7 +60,7 @@ public class RefinedProxyNetworkNode extends NetworkNode implements IComparable,
         super.update();
     }
 
-    // IComparable: どこ見てもこの実装なのでこれで良いかと思われる
+    // IComparable
 
     private int compare = IComparer.COMPARE_NBT;
 

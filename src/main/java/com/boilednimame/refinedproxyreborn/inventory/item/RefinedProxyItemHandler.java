@@ -18,7 +18,7 @@ import java.util.Objects;
 
 public class RefinedProxyItemHandler implements IItemHandler, IStorageCacheListener<ItemStack> {
     private INetwork network;
-    private ItemStack[] networkCacheItemData; // このブロックの内部インベントリ?
+    private ItemStack[] networkCacheItemData;
 
     private boolean onInvalidate;
 
@@ -49,7 +49,6 @@ public class RefinedProxyItemHandler implements IItemHandler, IStorageCacheListe
     // 参照: exposer
     @Override
     public int getSlots() {
-        // 異常なし.
         return this.networkCacheItemData.length + 1;
     }
 
@@ -57,7 +56,6 @@ public class RefinedProxyItemHandler implements IItemHandler, IStorageCacheListe
     @NotNull
     @Override
     public ItemStack getStackInSlot(int slot) {
-        // 異常なし.
         if (slot < this.networkCacheItemData.length) {
             return this.networkCacheItemData[slot];
         }
@@ -68,8 +66,6 @@ public class RefinedProxyItemHandler implements IItemHandler, IStorageCacheListe
     @NotNull
     @Override
     public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-        // 元コードではnull回避でnull -> emptyとする処理を挟んでいたがどうやら必要なくなった?(IDEが言っているだけなので信用してはならない)
-        // そもそもStackUtilsにnullToEmptyが無くなっていたようなので, Minecraft本体の部分が進化したのかも
         return Objects.requireNonNull(network).insertItem(stack, stack.getCount(), simulate ? Action.SIMULATE : Action.PERFORM);
     }
 
@@ -82,8 +78,8 @@ public class RefinedProxyItemHandler implements IItemHandler, IStorageCacheListe
                 return Objects.requireNonNull(this.network).extractItem(
                         this.networkCacheItemData[slot],
                         amount,
-                        IComparer.COMPARE_NBT | IComparer.COMPARE_QUANTITY, // exposerとコードは違うけど値は同じなので一緒
-                        simulate ? Action.SIMULATE : Action.PERFORM); // 三項演算子 bool ? bool->true : bool->false
+                        IComparer.COMPARE_NBT | IComparer.COMPARE_QUANTITY, // exposerとコードは違うけど値は同じ
+                        simulate ? Action.SIMULATE : Action.PERFORM);
             }
         }
         return ItemStack.EMPTY;
@@ -96,7 +92,7 @@ public class RefinedProxyItemHandler implements IItemHandler, IStorageCacheListe
 
     @Override
     public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-        return true; // trueでいい
+        return true;
     }
 
     // IStorageCacheListener<ItemStack>
@@ -113,7 +109,7 @@ public class RefinedProxyItemHandler implements IItemHandler, IStorageCacheListe
                                 .toArray(new StackListEntry[0]))
                         .map( m -> (ItemStack) m.getStack() )
                         .toList()
-                        .toArray(new ItemStack[0]); // 正常に動作しているのを確認
+                        .toArray(new ItemStack[0]); // 正常に動作
                 this.onInvalidate = false;
             }
         } else {
@@ -122,7 +118,6 @@ public class RefinedProxyItemHandler implements IItemHandler, IStorageCacheListe
     }
 
     // 参照: exposer
-    // 本当にこれで良いのか???と思ったけど, 他の実装もこんな調子だったのでパス
     @Override
     public void onAttached() {
 

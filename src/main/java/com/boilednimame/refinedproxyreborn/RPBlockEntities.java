@@ -6,7 +6,6 @@ import net.minecraftforge.registries.ObjectHolder;
 
 @ObjectHolder(RP.ID)
 public class RPBlockEntities implements ObjectID {
-    // 本来別のclassにあるがわざわざ増やすのもアレなので単体で引っ張ってくる
     @ObjectHolder(ID_REFINEDPROXY)
     @SuppressWarnings("rawtypes")
     public static final BlockEntityType<NetworkNodeBlockEntity> REFINEDPROXY = null;
